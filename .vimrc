@@ -91,10 +91,6 @@
     " Vim signs (:h signs) for modified lines based off VCS (e.g. Git)
     Plug 'mhinz/vim-signify'
 
-    " Awesome syntax checker.
-    " REQUIREMENTS: See :h syntastic-intro
-    Plug 'vim-syntastic/syntastic'
-
     " Functions, class data etc.
     " depends on either exuberant-ctags or universal-ctags
     if executable('ctags-exuberant') || executable('ctags')
@@ -409,10 +405,6 @@
         " Toggle undo history tree
         nnoremap <F5> :UndotreeToggle<CR>
 
-        " Syntastic - toggle error list. Probably should be toggleable.
-        noremap <silent><Leader>lo :Errors<CR>
-        noremap <silent><Leader>lc :lclose<CR>
-
         " EasyAlign - interactive mode (e.g. vipga/gaip)
         xmap ga <Plug>(EasyAlign)
         nmap ga <Plug>(EasyAlign)
@@ -447,18 +439,6 @@
 
         " Used in lightline.vim
         let g:tagbar_status_func = 'TagbarStatusFunc'
-    """ }}}
-    """ Syntastic {{{
-        " Automatic checking for active, only when :SyntasticCheck for passive
-        " NOTE: override these in $HOME/.vimrc.first as needed!
-        " https://github.com/timss/vimconf/issues/9
-        let g:syntastic_mode_map = get(g:, 'syntastic_mode_map', {
-            \ 'mode': 'passive',
-            \ 'active_filetypes':
-                \ ['c', 'cpp', 'perl', 'python'] })
-
-        " Skip check on :wq, :x, :ZZ etc
-        let g:syntastic_check_on_wq = 0
     """ }}}
     """ Netrw {{{
         let g:netrw_banner = 0
@@ -498,7 +478,7 @@
             \     'right': [
             \         ['lineinfo'],
             \         ['percent'],
-            \         ['fileformat', 'fileencoding', 'filetype', 'syntastic']
+            \         ['fileformat', 'fileencoding', 'filetype']
             \     ]
             \ },
             \ 'component': {
@@ -513,12 +493,6 @@
             \     'fileformat'   : 'LightlineFileformat',
             \     'fileencoding' : 'LightlineFileencoding',
             \     'filetype'     : 'LightlineFiletype'
-            \ },
-            \ 'component_expand': {
-            \     'syntastic': 'SyntasticStatuslineFlag',
-            \ },
-            \ 'component_type': {
-            \     'syntastic': 'middle',
             \ },
             \ 'subseparator': {
             \     'left': '|', 'right': '|'
@@ -624,18 +598,6 @@
             let g:lightline.fname = a:fname
             return lightline#statusline(0)
         endfunction
-
-        function! s:syntastic()
-            SyntasticCheck
-            call lightline#update()
-        endfunction
-
-        augroup AutoSyntastic
-            autocmd!
-            execute 'autocmd FileType ' .
-                \join(g:syntastic_mode_map['active_filetypes'], ',') .
-                \' autocmd BufWritePost <buffer> :call s:syntastic()'
-        augroup END
     """ }}}
 """ }}}
 """ Local ending config, will overwrite anything above. Generally use this. {{{
